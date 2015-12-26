@@ -1,4 +1,4 @@
-#!perl
+#!/usr/bin/perl
 
 # check_lm_sensors is a Nagios plugin to monitor the values of on board sensors and hard
 # disk temperatures on Linux systems
@@ -401,7 +401,7 @@ sub parse_sensors {
             "Error closing $DEV_DIR/$device/device/name: $OS_ERROR" );
 
         # list sensors
-        opendir $dir_handle, "$DEV_DIR/$device/device/"
+        opendir $dir_handle, "$DEV_DIR/$device/"
           or return;
         my @sensors = apply { s/_input//mxs; }
         grep { m/^[^.].*_input/mxs } readdir $dir_handle;
@@ -416,11 +416,11 @@ sub parse_sensors {
             my $value;
 
             open $sensor_handler, q{<},
-              "$DEV_DIR/$device/device/$sensor"
+              "$DEV_DIR/$device/$sensor"
               . '_input'
               or $plugin->nagios_exit(
                 UNKNOWN,
-                "Error reading $DEV_DIR/$device/device/$sensor"
+                "Error reading $DEV_DIR/$device/$sensor"
                   . "_input: $OS_ERROR"
               );
             while (<$sensor_handler>) {
@@ -430,7 +430,7 @@ sub parse_sensors {
             }
             close $sensor_handler
               or $plugin->nagios_exit( UNKNOWN,
-                    "Error closing $DEV_DIR/$device/device/$sensor"
+                    "Error closing $DEV_DIR/$device/$sensor"
                   . "_input: $OS_ERROR" );
 
             my $full_name = $device_name . q{_} . $sensor;
